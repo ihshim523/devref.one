@@ -1,5 +1,6 @@
 'use client';
 
+import { Fragment } from 'react';
 import { Printer } from 'lucide-react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -95,20 +96,38 @@ function renderBlock(block: string, key: number): React.ReactNode {
 
   const lines = block.split('\n');
 
-  if (lines.length === 1) {
-    const m = lines[0].match(/^(#{1,6})\s+(.+)/);
-    if (m) {
-      const level = m[1].length;
-      const content = renderInline(m[2]);
-      switch (level) {
-        case 1: return <h1 key={key}>{content}</h1>;
-        case 2: return <h2 key={key}>{content}</h2>;
-        case 3: return <h3 key={key}>{content}</h3>;
-        case 4: return <h4 key={key}>{content}</h4>;
-        case 5: return <h5 key={key}>{content}</h5>;
-        case 6: return <h6 key={key}>{content}</h6>;
+  // Check for heading on first line — works for both single and multi-line blocks
+  const headingMatch = lines[0]?.match(/^(#{1,6})\s+(.+)/);
+  if (headingMatch) {
+    const level = headingMatch[1].length;
+    const content = renderInline(headingMatch[2]);
+    let headingEl: React.ReactNode;
+    switch (level) {
+      case 1: headingEl = <h1 key={key}>{content}</h1>; break;
+      case 2: headingEl = <h2 key={key}>{content}</h2>; break;
+      case 3: headingEl = <h3 key={key}>{content}</h3>; break;
+      case 4: headingEl = <h4 key={key}>{content}</h4>; break;
+      case 5: headingEl = <h5 key={key}>{content}</h5>; break;
+      case 6: headingEl = <h6 key={key}>{content}</h6>; break;
+      default: headingEl = null;
+    }
+    // If there's more content after the heading, render it recursively too
+    if (lines.length > 1) {
+      const rest = lines.slice(1).join('\n').trim();
+      if (rest) {
+        return (
+          <Fragment key={key}>
+            {headingEl}
+            {renderBlock(rest, key + 1000000)}
+          </Fragment>
+        );
       }
     }
+    return headingEl;
+  }
+
+  if (lines.length === 1) {
+    // Single-line blocks: heading case is handled above, fall through to other checks
   }
 
   if (lines.every(l => l.trim().startsWith('|') && l.trim().endsWith('|'))) {
