@@ -58,11 +58,13 @@ body {
 .cheatsheet-content strong { font-weight: 700; }
 
 @media print {
-  nav, .sidebar, .search-bar, .theme-toggle, .mobile-menu-btn, .mobile-overlay { display: none !important; }
+  nav, .sidebar, .search-bar, .theme-toggle, .mobile-menu-btn, .mobile-overlay, .print-pdf-btn { display: none !important; }
   body { color: #000 !important; background: #fff !important; }
   .cheatsheet-content h1, .cheatsheet-content h2 { page-break-after: avoid; }
-  .cheatsheet-content pre, .cheatsheet-content table { page-break-inside: avoid; }
+  .cheatsheet-content pre, .cheatsheet-content table, .cheatsheet-content .group { page-break-inside: avoid; }
   .cheatsheet-content { max-width: 100% !important; }
   code { font-family: "Courier New", Courier, monospace !important; }
   a { color: #000 !important; text-decoration: underline !important; }
+  .cheatsheet-content .group { position: static !important; }
+  .cheatsheet-content .group button { display: none !important; }
 }

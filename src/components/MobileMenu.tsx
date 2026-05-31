@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Code2, Wrench, Terminal, Database } from 'lucide-react';
+import { Menu, X, Code2, Wrench, Terminal, Database, Beaker, FileJson, Regex, Keyboard } from 'lucide-react';
 import SearchBar from './SearchBar';
 import ThemeToggle from './ThemeToggle';
 
@@ -109,6 +109,34 @@ export default function MobileMenu({ categories }: MobileMenuProps) {
               </ul>
             </div>
           ))}
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-1.5 px-2">
+              <Beaker size={16} />
+              Tools
+            </div>
+            <ul className="space-y-0.5">
+              {[
+                { href: '/tools/json-validator', label: 'JSON Validator', icon: <FileJson size={16} /> },
+                { href: '/tools/yaml-validator', label: 'YAML Validator', icon: <FileJson size={16} /> },
+                { href: '/tools/regex-tester', label: 'Regex Tester', icon: <Regex size={16} /> },
+                { href: '/tools/vim-trainer', label: 'Vim Trainer', icon: <Keyboard size={16} /> },
+              ].map(tool => (
+                <li key={tool.href}>
+                  <Link
+                    href={tool.href}
+                    className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors ${
+                      pathname === tool.href
+                        ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium'
+                        : 'hover:bg-[var(--sidebar-hover)]'
+                    }`}
+                  >
+                    {tool.icon}
+                    {tool.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="flex items-center justify-between px-2 pt-2 border-t border-[var(--border)]">
             <span className="text-xs text-[var(--muted)]">Theme</span>
             <ThemeToggle />
